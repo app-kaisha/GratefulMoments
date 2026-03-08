@@ -8,6 +8,7 @@
 
 import SwiftUI
 import PhotosUI
+import SwiftData
 
 struct MomentEntryView: View {
     
@@ -15,6 +16,10 @@ struct MomentEntryView: View {
     @State private var note = ""
     @State private var imageData: Data?
     @State private var newImage: PhotosPickerItem?
+    @State private var isShowingCancelConfirmation = false
+    
+    @Environment(DataContainer.self) private var dataContainer
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         NavigationStack {
@@ -23,6 +28,40 @@ struct MomentEntryView: View {
             }
             .scrollDismissesKeyboard(.interactively)
             .navigationTitle("Grateful For")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel", systemImage: "xmark") {
+                        if title.isEmpty, note.isEmpty, imageData == nil {
+                            dismiss()
+                        } else {
+                            isShowingCancelConfirmation = true
+                        }
+                    }
+                    .confirmationDialog("Discard Moment", isPresented: $isShowingCancelConfirmation) {
+                        Button("Discard Moment", role: .destructive) {
+                            dismiss()
+                        }
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Add", systemImage: "checkmark") {
+                        let newMoment = Moment(
+                            title: title,
+                            note: note,
+                            imageData: imageData,
+                            timestamp: .now
+                        )
+                        dataContainer.context.insert(newMoment)
+                        do {
+                            try dataContainer.context.save()
+                            dismiss()
+                        } catch {
+                            // Don't dismiss
+                        }
+                    }
+                    .disabled(title.isEmpty)
+                }
+            }
         }
     }
     
@@ -77,4 +116,5 @@ struct MomentEntryView: View {
 
 #Preview {
     MomentEntryView()
+        .sampleDataContainer()
 }
