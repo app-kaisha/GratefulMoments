@@ -14,7 +14,7 @@ struct Hexagon<Content: View>: View {
     var borderColour: Color = .ember
     
     var moment: Moment? = nil
-    var layout: HexagonLayout = .large
+    var layout: HexagonLayout = .standard
     
     @ViewBuilder
     var content: () -> Content
@@ -35,6 +35,7 @@ struct Hexagon<Content: View>: View {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: layout.size - borderWidth, height: layout.size - borderWidth)
+                .fontWeight(.ultraLight)
         }
         .background {
             Image(systemName: "hexagon")
@@ -42,6 +43,7 @@ struct Hexagon<Content: View>: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(width: layout.size, height: layout.size)
                 .foregroundStyle(borderColour)
+                .fontWeight(.ultraLight)
             
         }
         .frame(width: layout.size, height: layout.size)
