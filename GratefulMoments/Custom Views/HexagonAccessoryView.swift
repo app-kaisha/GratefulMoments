@@ -31,6 +31,7 @@ struct HexagonAccessoryView: View {
             if badges.count > 1 {
                 Text("+\(badges.count)")
                     .bold()
+                    .minimumScaleFactor(0.3)
                     .frame(width: size * 0.5, height: size * 0.5)
                     .padding(8)
                     .background {
@@ -74,6 +75,7 @@ struct HexagonAccessoryView: View {
 }
 
 #Preview("Multiple Badges") {
-    MomentHexagonView(moment: .imageSample, layout: .large)
+    MomentHexagonView(moment: .imageSample, layout: .standard)
+        .dynamicTypeSize(.large)
         .sampleDataContainer()
 }
