@@ -21,13 +21,29 @@ struct StreakCalculator {
             .map(\.timestamp)
             .map { calendar.dateComponents([.day], from: $0, to: endOfToday) }
             .compactMap { $0.day }
+        print(daysAgoArray)
         
         var streak = 0
         // compute streak
         for daysAgo in daysAgoArray {
             if daysAgo == streak {
+                print("Streak already here. Don't increase the streak")
+                continue
+            } else if daysAgo == streak + 1{
+                print("A moment exists the day after the current streak")
                 streak += 1
+                print("Increasing streak to \(streak)")
+            } else {
+                print("Streak of \(streak) broken with daysAgo \(daysAgo)")
+                break
             }
+        }
+        
+        // Streak is calculated above starting from yesterday.
+        // not yet saving a moment today shouldn't break the streak
+        // if a moment has been saved today, include it in the streak
+        if daysAgoArray.first == 0 {
+            streak += 1
         }
         
         return streak
